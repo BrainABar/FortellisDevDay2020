@@ -1,12 +1,19 @@
 from flask import Flask, abort, request, jsonify
-from flasgger import Swagger
+from devday import app, Swagger, Config
+from devday.twiliohandler import TwilioHandler
 import json
 
-
-app = Flask(__name__)
-Swagger(app)
-
+handler = TwilioHandler(Config.TWILIO_ACCOUNT_SID, Config.TWILIO_AUTH_TOKEN, Config.TWILIO_NUMBER)
 appointments = {}
+
+
+@app.route('/sms/', methods=['GET'])
+def process_sms():
+
+    if request.headers.get('X-Twilio-Signature'):
+        handler.createmessage('Hello world', to='7024154906')
+    return '', 200
+
 
 
 @app.route('/setappointment/', methods=['POST'])
@@ -65,10 +72,6 @@ def approve_service(task_id):
     return appointments[task_id]
 
 
-@app.route('/workcomplete/<int:task_id>', method=['GET'])
+@app.route('/workcomplete/<int:task_id>', methods=['GET'])
 def work_complete(task_id):
     return appointments[task_id]
-
-
-if __name__ == '__main__':
-    app.run()
