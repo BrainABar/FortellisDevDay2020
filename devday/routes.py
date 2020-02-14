@@ -21,7 +21,19 @@ def process_sms():
                     appointments[customer['id']] = customer
                     customermessage = 'Thank you {}. We shall notify you once work is complete'.format(customer['name'])
                     handler.createmessage(body=customermessage, to=fromnumber)
-                    return '<Response></Response>'
+                elif 'details' in body.lower():
+                    techname = customer['techName']
+                    techcomment = customer['techComment']
+                    issues = customer['issue']
+                    price = customer['price']
+
+                    customermessage = '{} is your tech.\n' \
+                                      'Tech Comment: {}\n' \
+                                      'repairs: {}\n' \
+                                      'price: ${}\n' \
+                                      'reply ok to accept or call 555-555-5555'.format(techname, techcomment, issues, price)
+                    handler.createmessage(body=customermessage, to=fromnumber)
+                return '<Response></Response>'
 
         customermessage = 'You do not have an appointment with Rebel Shop. Call to set one up.'
         handler.createmessage(body=customermessage, to=fromnumber)
@@ -112,7 +124,8 @@ def approve_service(task_id):
         price = str(customer['price'])
         phonenumber = customer['number']
         customermessage = 'Your {} needs {} for ${}.\n' \
-                          'Please text ok to Approve or Call 555-555-5555'.format(car, issue, price)
+                          'Please text ok to Approve or Call 555-555-5555\n' \
+                          'or text details for more info'.format(car, issue, price)
         handler.createmessage(customermessage, phonenumber)
 
     return json.dumps(appointments[task_id])
