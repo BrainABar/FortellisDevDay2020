@@ -1,4 +1,4 @@
-from flask import Flask, abort, request
+from flask import Flask, abort, request, jsonify
 import json
 
 
@@ -9,9 +9,6 @@ appointments = []
 
 @app.route('/setappointment/', methods=['POST'])
 def set_appointment():
-    if request.method == 'GET':
-        return abort(404)
-
     if request.method == 'POST':
         customer = {}
         name = request.args['name']
@@ -29,8 +26,14 @@ def set_appointment():
         customer['issue'] = 'Doesnt work'
         customer['custComment'] = 'Fix it'
         customer['techComment'] = 'Fixing your car'
-        appointments.append(customer)
+        appointments.append(json.dumps(customer))
         return json.dumps(customer)
+
+
+@app.route('/getappointment/<int:task_id>', methods=['GET'])
+def get_appointment(task_id):
+    if request.method == 'GET':
+        return appointments[task_id]
 
 
 if __name__ == '__main__':
