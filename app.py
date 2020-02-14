@@ -6,13 +6,13 @@ import json
 app = Flask(__name__)
 Swagger(app)
 
-appointments = []
+appointments = {}
 
 
 @app.route('/setappointment/', methods=['POST'])
 def set_appointment():
     """
-    This is an API
+    Sets the appointment for the customer
     ---
     tags:
         - Set appointment endpoint
@@ -22,6 +22,16 @@ def set_appointment():
             type: string
             required: true
             description: The name of the customer
+        -   name: time
+            in: path
+            type: string
+            required: true
+            description: Time of appointment as 'HHMM'
+        -   name: number
+            in: path
+            type: string
+            required: true
+            description: Client's phone number
     :return:
     """
     if request.method == 'POST':
@@ -41,7 +51,7 @@ def set_appointment():
         customer['issue'] = 'Doesnt work'
         customer['custComment'] = 'Fix it'
         customer['techComment'] = 'Fixing your car'
-        appointments.append(json.dumps(customer))
+        appointments[customer['id']] = json.dumps(customer)
         return json.dumps(customer)
 
 
@@ -49,6 +59,8 @@ def set_appointment():
 def get_appointment(task_id):
     if request.method == 'GET':
         return appointments[task_id]
+
+
 
 
 if __name__ == '__main__':
