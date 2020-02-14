@@ -1,14 +1,29 @@
 from flask import Flask, abort, request, jsonify
+from flasgger import Swagger
 import json
 
 
 app = Flask(__name__)
+Swagger(app)
 
 appointments = []
 
 
 @app.route('/setappointment/', methods=['POST'])
 def set_appointment():
+    """
+    This is an API
+    ---
+    tags:
+        - Set appointment endpoint
+    parameters:
+        -   name: name
+            in: path
+            type: string
+            required: true
+            description: The name of the customer
+    :return:
+    """
     if request.method == 'POST':
         customer = {}
         name = request.args['name']
