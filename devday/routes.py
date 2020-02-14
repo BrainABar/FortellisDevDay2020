@@ -69,12 +69,12 @@ def set_appointment():
         customer['price'] = 2000
         customer['techName'] = 'Rebel Tech'
         customer['hasArrived'] = False
-        customer['issue'] = 'Rough acceleration'
+        customer['issue'] = 'catalytic converter, gas pump, and lower/upper o2 sensors'
         customer['custComment'] = 'Car struggles to accelerate'
         customer['techComment'] = 'Catalytic converter has started to fail due to failing gas pump'
         appointments[customer['id']] = customer
 
-        customermessage = '{}, you have an appointment at Rebel Shop at {}, for your {}'.format(name, time, customer['car'])
+        customermessage = '{}, you have an appointment at Rebel Shop starting at {}, for your {}'.format(name, time, customer['car'])
         handler.createmessage(body=customermessage, to=customer['number'])
 
         return json.dumps(customer)
@@ -91,7 +91,7 @@ def get_appointment(task_id):
         car = customer['car']
         phonenumber = customer['number']
         customermessage = 'Welcome to the Rebel Shop Tracking.' \
-                          'You will receive updates regarding your {}'.format(car)
+                          'You will receive repair/quote updates regarding your {}'.format(car)
         handler.createmessage(customermessage, phonenumber)
 
         return json.dumps(appointments[customer['id']])
@@ -111,7 +111,7 @@ def approve_service(task_id):
         issue = customer['issue']
         price = str(customer['price'])
         phonenumber = customer['number']
-        customermessage = 'Your {} needs {} at a cost of {}.\n' \
+        customermessage = 'Your {} needs {} for ${}.\n' \
                           'Please text ok to Approve or Call 555-555-5555'.format(car, issue, price)
         handler.createmessage(customermessage, phonenumber)
 
@@ -130,8 +130,8 @@ def work_complete(task_id):
         car = customer['car']
         client_id = customer['id']
         phonenumber = customer['number']
-        custommessage = 'Hello {}, you {} work is complete and ready for pick up\n' \
-                        'billing statement at: rebelshop.domain/{}{}'.format(name, car, client_id, '12345')
+        custommessage = 'Hello {}, your {}\'s repairs are complete and is ready for pick up\n' \
+                        'billing/payment at: rebelshop.domain/{}{}'.format(name, car, client_id, '482495738')
         handler.createmessage(custommessage, phonenumber)
 
         return json.dumps(customer)
