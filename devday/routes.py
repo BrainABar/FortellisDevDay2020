@@ -26,7 +26,7 @@ def process_sms():
         customermessage = 'You do not have an appointment with Rebel Shop. Call to set one up.'
         handler.createmessage(body=customermessage, to=fromnumber)
 
-    return 'Hello'
+    return abort(404)
 
 
 @app.route('/setappointment/', methods=['POST'])
@@ -66,17 +66,16 @@ def set_appointment():
         customer['car'] = '2010 Nissan Altima'
         customer['isComplete'] = False
         customer['workApproved'] = False
-        customer['price'] = 1000
+        customer['price'] = 2000
         customer['techName'] = 'Rebel Tech'
         customer['hasArrived'] = False
-        customer['issue'] = 'Spark plug needs tightening'
-        customer['custComment'] = 'Fix it'
-        customer['techComment'] = 'Fixing your car'
+        customer['issue'] = 'Rough acceleration'
+        customer['custComment'] = 'Car struggles to accelerate'
+        customer['techComment'] = 'Catalytic converter has started to fail due to failing gas pump'
         appointments[customer['id']] = customer
 
         customermessage = '{}, you have an appointment at Rebel Shop at {}, for your {}'.format(name, time, customer['car'])
-
-        handler.createmessage(customermessage, to=customer['number'])
+        handler.createmessage(body=customermessage, to=customer['number'])
 
         return json.dumps(customer)
 
@@ -105,6 +104,9 @@ def approve_service(task_id):
 
     if task_id in appointments:
         customer = appointments[task_id]
+        customer['workApproved'] = True
+        appointments[customer['id']] = customer
+
         car = customer['car']
         issue = customer['issue']
         price = str(customer['price'])
