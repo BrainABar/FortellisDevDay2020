@@ -57,10 +57,17 @@ def set_appointment():
 
 @app.route('/getappointment/<int:task_id>', methods=['GET'])
 def get_appointment(task_id):
-    if request.method == 'GET':
-        return appointments[task_id]
+    return appointments[task_id]
 
 
+@app.route('/approveservice/<int:task_id>', methods=['GET'])
+def approve_service(task_id):
+    return appointments[task_id]
+
+
+@app.route('/workcomplete/<int:task_id>', method=['GET'])
+def work_complete(task_id):
+    return appointments[task_id]
 
 
 if __name__ == '__main__':
